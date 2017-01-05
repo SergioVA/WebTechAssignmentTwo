@@ -1,4 +1,5 @@
 var express = require('express');
+var exphbs  = require('express-handlebars');
 var bodyParser = require('body-parser');
 var expressSession = require('express-session');
 var mongodb = require('mongodb');
@@ -16,8 +17,9 @@ app.use(expressSession({secret: '1234567890QWERTY', saveUninitialized: false, re
 
 
 // views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+// app.set('views', __dirname + '/views');
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 db.users.createIndex({"email":1}, {unique:true});
 
