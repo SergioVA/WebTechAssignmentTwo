@@ -1,4 +1,5 @@
 var express = require('express');
+var exphbs  = require('express-handlebars');
 var bodyParser = require('body-parser');
 var app = express();
 
@@ -9,8 +10,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:true })); //used for bootstrap login and sign up forms
 
 // views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+// app.set('views', __dirname + '/views');
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 app.get('/', function(request, response) {
   response.render('pages/index');
