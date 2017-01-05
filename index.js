@@ -19,6 +19,8 @@ app.use(expressSession({secret: '1234567890QWERTY', saveUninitialized: false, re
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+db.users.createIndex({"email":1}, {unique:true});
+
 app.get('/', function(request, response) {
   response.render('pages/index');
 });
