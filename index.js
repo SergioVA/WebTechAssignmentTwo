@@ -21,7 +21,7 @@ app.use(expressSession({secret: '1234567890QWERTY', saveUninitialized: false, re
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-db.users.createIndex({"email":1}, {unique:true});
+//db.users.createIndex({"email":1}, {unique:true});
 
 app.get('/', function(request, response) {
   response.render('pages/index');
