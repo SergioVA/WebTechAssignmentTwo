@@ -25,3 +25,65 @@
     .jumbotron .lang-logo img {
       max-width: 100%; }
 
+
+.carousel-inner img {
+  width: 100%; /* Set width to 100% */
+  margin: auto;
+  min-height:200px;
+}
+
+img.img-responsive{
+  margin: auto auto;
+}
+
+/* Hide the carousel text when the screen is less than 600 pixels wide */
+@media (max-width: 600px) {
+  #myCarousel {
+    display: none;
+  }
+}
+@media (min-width: 600px) {
+  #smallScreen {
+    display: none;
+  }
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.navbar-inverse{
+  background-color: #22333B;
+  border-color: #22333B;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus{
+  background-color: #19262B;
+}
+
+body{
+  font-family: 'Source Sans Pro';
+}
+
+/* Footer */
+footer {
+  background-color: #C2C7C9;
+  padding: 15px;
+}
+
+footer p {
+  margin: 0px;
+}
+
+/* Headers */
+
+h1, h2, h3, h4 {
+  font-family: 'Amatic SC';
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 40px;
+}
