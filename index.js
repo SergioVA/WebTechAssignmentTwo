@@ -87,24 +87,28 @@ app.post('/signup', function(request, response) {
 
   registerAccount(request.body.email, request.body.password);
   //response.redirect('/profile');
-  response.send('OK');
+  response.redirect('/login');
 });
 
 app.get('/profile', isLoggedIn, function(request, response) {
   console.log('received login request');
   //response.send('Login response for ' + request.session.user);
-  var todolist = [{name: 'test', done: false}, {name: 'doneTesting', done: true}]
+  //var todolist = [{text: 'test', done: false}, {text: 'doneTesting', done: true}]
+  var todolist = getTodoList(request.session.user);
+  console.log('Get todo list: ' + JSON.stringify(todolist));
   response.render('pages/profile', {listitems: todolist});
 });
 
 app.post('/profile', function(req, res) {
-  console.log('Received profile post request with item' + req.body.item);
+  console.log('Received profile post request with item' + req.body);
+
+  addTodoItem(req.session.user, req.body.text, req.body.done);
 
   res.render('pages/profile');
 });
 
 app.delete('/profile', function(req, res) {
-  console.log('Received profile delete request with item' + req.body.item);
+  console.log('Received profile delete request with item' + JSON.stringify(req.body));
 
   res.render('pages/profile');
 });
@@ -154,17 +158,31 @@ function createAccountObj(email, password) {
   ];
 }
 
-function getTodoList(useremail) {
-  var todolists = db.collection('todolists');
-  todolists.findOne({ email: useremail }, function(err, todo) {
-    if(err) return next(err);
-    if(todo) {
+//insert or update items
+function addTodoItem(owneremail, text, isDone) {
+  console.log('Adding new todo item with owner: ' + owneremail + ' ,text: ' + text + ' ,done: ' + isDone);
+  var todoitems = db.collection('todoitems');
+  var query = {owner: owneremail, text: text};
+  var updateParams = { $set: {done: isDone}};
+  todoitems.update(query, updateParams, {upsert: true}, function(err, doc) {
+    if(err) throw err;
+  });
+}
 
+function getTodoList(owneremail) {
+  var todoitems = db.collection('todoitems');
+  todoitems.find({ owner: owneremail }, function(err, todolist) {
+    if(err) throw err;
+
+    if(todolist) {
+      console.log('got a todolist' + todolist);
+      return todolist.toArray();
     }
-    else
-      res.send('No todo list found for user!');
+    else {
+      console.log('could not find user with email ' + owneremail);
+      return [];
+    }
 
-    db.close();
   });
 }
 

@@ -71,10 +71,13 @@
 
 /* Style the header */
 #todolist .header {
-    background-color: #f44336;
+    background-color: #3d79db;
     padding: 30px 40px;
-    color: white;
     text-align: center;
+}
+
+#todolist .header h2 {
+    color: white;
 }
 
 /* Clear floats after the header */

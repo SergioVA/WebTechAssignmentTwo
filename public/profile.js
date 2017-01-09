@@ -10,6 +10,12 @@ $(document).ready(function() {
     close[i].onclick = function() {
       var div = this.parentElement;
       div.style.display = "none";
+
+      var itemtext = $(ev.target).parent().parent().contents().filter(function(){
+        return this.nodeType == 3;
+      })[0].nodeValue;
+
+      $.ajax( {url: '/profile', type: 'DELETE', data: {text: itemtext , done: $(ev.target).hasClass('checked')}});
     }
   }
 
@@ -19,12 +25,20 @@ $(document).ready(function() {
     if (ev.target.tagName === 'LI') {
       ev.target.classList.toggle('checked');
     }
-    var itemtext = $(ev.target).parent().contents().filter(function(){
+    var itemtext = $(ev.target).contents().filter(function(){
       return this.nodeType == 3;
-    })[0].nodeValue);
+    })[0].nodeValue;
 
-    $.delete('/profile', {item: itemtext , done: ev.target.hasClass('checked')});
+    $.post('/profile', {text: itemtext , done: $(ev.target).hasClass('checked')});
   }, false);
+
+  //add enter event to the input field
+  $('#myInput').on('keyup', function (e) {
+    if (e.keyCode == 13) {
+        newElement();
+    }
+  });
+
 });
 
 // Create a new list item when clicking on the "Add" button
@@ -34,7 +48,7 @@ function newElement() {
   var t = document.createTextNode(inputValue);
   li.appendChild(t);
   if (inputValue === '') {
-    alert("You must write something!");
+    alert("You must enter a task before adding it!");
   } else {
     document.getElementById("myUL").appendChild(li);
   }
@@ -53,5 +67,5 @@ function newElement() {
     }
   }
 
-  $.post('/profile', {item: 'testdata', done: false});
+  $.post('/profile', {text: inputValue, done: false});
 }

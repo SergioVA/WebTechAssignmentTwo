@@ -72,6 +72,9 @@ body{
 footer {
   background-color: #C2C7C9;
   padding: 15px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 footer p {
