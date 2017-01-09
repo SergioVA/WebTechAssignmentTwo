@@ -15,7 +15,7 @@ $(document).ready(function() {
         return this.nodeType == 3;
       })[0].nodeValue;
 
-      $.ajax( {url: '/profile', type: 'DELETE', data: {text: itemtext , done: $(ev.target).hasClass('checked')}});
+      $.ajax( {url: '/profile', type: 'DELETE', data: {text:itemtext , done: $(ev.target).hasClass('true')}});
     }
   }
 
@@ -23,13 +23,14 @@ $(document).ready(function() {
   var list = document.querySelector('#todolist ul');
   list.addEventListener('click', function(ev) {
     if (ev.target.tagName === 'LI') {
-      ev.target.classList.toggle('checked');
+      ev.target.classList.toggle('true');
     }
     var itemtext = $(ev.target).contents().filter(function(){
       return this.nodeType == 3;
     })[0].nodeValue;
+    itemtext = itemtext.trim();
 
-    $.post('/profile', {text: itemtext , done: $(ev.target).hasClass('checked')});
+    $.post('/profile', {text:itemtext , done: $(ev.target).hasClass('true')});
   }, false);
 
   //add enter event to the input field

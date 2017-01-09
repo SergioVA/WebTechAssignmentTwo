@@ -36,14 +36,14 @@
 }
 
 /* When clicked on, add a background color and strike out text */
-#todolist ul li.checked {
+#todolist ul li.true {
     background: #888;
     color: #fff;
     text-decoration: line-through;
 }
 
 /* Add a "checked" mark when clicked on */
-#todolist ul li.checked::before {
+#todolist ul li.true::before {
     content: '';
     position: absolute;
     border-color: #fff;
