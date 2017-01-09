@@ -19,6 +19,11 @@ $(document).ready(function() {
     if (ev.target.tagName === 'LI') {
       ev.target.classList.toggle('checked');
     }
+    var itemtext = $(ev.target).parent().contents().filter(function(){
+      return this.nodeType == 3;
+    })[0].nodeValue);
+
+    $.delete('/profile', {item: itemtext , done: ev.target.hasClass('checked')});
   }, false);
 });
 

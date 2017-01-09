@@ -18,7 +18,6 @@ app.use(expressSession({secret: '1234567890QWERTY', saveUninitialized: false, re
 //make sure that the session variable is available for handlebars
 app.use(function(req, res, next){
         res.locals.session = req.session;
-        console.log(res.locals.session);
         next();
 });
 
