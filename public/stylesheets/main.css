@@ -30,6 +30,7 @@
   width: 100%; /* Set width to 100% */
   margin: auto;
   min-height:200px;
+  max-height: 300px;
 }
 
 img.img-responsive{
@@ -64,7 +65,7 @@ img.img-responsive{
 }
 
 body{
-  font-family: 'Source Sans Pro';
+  font-family: sans-serif;
 }
 
 /* Footer */
@@ -80,7 +81,7 @@ footer p {
 /* Headers */
 
 h1, h2, h3, h4 {
-  font-family: 'Amatic SC';
+  font-family: 'Arial';
   font-weight: bold;
 }
 

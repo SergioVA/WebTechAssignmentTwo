@@ -1,0 +1,22 @@
+<link href="/stylesheets/profile.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="profile.js"></script>
+
+<div id="todolist">
+  <div id="myDIV" class="header">
+    <h2>To Do List</h2>
+    <input type="text" id="myInput" placeholder="Task...">
+    <span onclick="newElement()" class="addBtn">Add</span>
+  </div>
+
+  <ul id="myUL">
+    <li>Hit the gym</li>
+    <li class="checked">Pay bills</li>
+    <li>Meet George</li>
+    <li>Buy eggs</li>
+    <li>Read a book</li>
+    <li>Organize office</li>
+    {{#each listitems}}
+      <li {{#if done}} class="checked" {{/if}}>{{name}} <span class="close">×</span></li>
+    {{/each}}
+  </ul>
+</div>

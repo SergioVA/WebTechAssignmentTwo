@@ -6,7 +6,7 @@ var mongodb = require('mongodb');
 var app = express();
 var MongoClient = mongodb.MongoClient;
 
-var uri = 'mongodb://pizzapartyapp:pizzaforever@ds054619.mlab.com:54619/pizzadatabase';
+var uri = 'mongodb://todolistapp:todoappjs@ds054619.mlab.com:54619/todolist';
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -32,7 +32,8 @@ app.get('/login', function(req, res) {
 
   //if the user is already logged in
   if(req.session.user) {
-    res.send('Already logged in');
+    //res.send('Already logged in');
+    res.redirect('/profile');
     return;
   }
   else {
@@ -45,7 +46,8 @@ app.post('/login', function(req, res, next) {
 
   //if the user is already logged in
   if(req.session.user) {
-    res.send('Already logged in');
+    //res.send('Already logged in');
+    res.redirect('/profile');
     return;
   }
 
@@ -92,7 +94,15 @@ app.post('/signup', function(request, response) {
 
 app.get('/profile', isLoggedIn, function(request, response) {
   console.log('received login request');
-  response.send('Login response for ' + request.params.email);
+  //response.send('Login response for ' + request.session.user);
+  var todolist = [{name: 'test', done: false}, {name: 'doneTesting', done: true}]
+  response.render('pages/profile', {listitems: todolist});
+});
+
+app.post('/profile', function(req, res) {
+  console.log('Received profile post request with item' + req.body.item);
+
+  res.render('pages/profile');
 });
 
 app.get('/logout', function (req, res) {
@@ -139,6 +149,25 @@ function createAccountObj(email, password) {
       password:password
     }
   ];
+}
+
+function getTodoList(useremail) {
+  MongoClient.connect(uri, function(err, db) {
+    if(err)
+      throw err;
+
+    var todolists = db.collection('todolists');
+    todolists.findOne({ email: useremail }, function(err, todo) {
+      if(err) return next(err);
+      if(todo) {
+
+      }
+      else
+        res.send('No todo list found for user!');
+
+      db.close();
+    });
+  });
 }
 
 function isLoggedIn(req, res, next) {
