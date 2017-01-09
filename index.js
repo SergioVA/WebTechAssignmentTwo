@@ -7,6 +7,7 @@ var app = express();
 var MongoClient = mongodb.MongoClient;
 
 var uri = 'mongodb://todolistapp:todoappjs@ds054619.mlab.com:54619/todolist';
+var db;
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -14,7 +15,12 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:true })); //used for bootstrap login and sign up forms
 app.use(expressSession({secret: '1234567890QWERTY', saveUninitialized: false, resave: false}));
-
+//make sure that the session variable is available for handlebars
+app.use(function(req, res, next){
+        res.locals.session = req.session;
+        console.log(res.locals.session);
+        next();
+});
 
 // views is directory for all template files
 // app.set('views', __dirname + '/views');
@@ -54,29 +60,22 @@ app.post('/login', function(req, res, next) {
   var email = req.body.email;
   var password = req.body.password;
 
-  MongoClient.connect(uri, function(err, db) {
-    if(err)
-      throw err;
+  var users = db.collection('users');
+  users.findOne({ email: email }, function(err, user) {
+    if(err) return next(err);
+    if(user) {
+      if(user.password === password) {
 
-    var users = db.collection('users');
-    users.findOne({ email: email }, function(err, user) {
-      if(err) return next(err);
-      if(user) {
-        if(user.password === password) {
-
-          req.session.user = email;
-          res.redirect('/profile');
-        }
-        else {
-          console.log('user pw is ' + user + ' but pw input was ' + password);
-          res.send('Wrong password');
-        }
+        req.session.user = email;
+        res.redirect('/profile');
       }
-      else
-        res.send('Wrong email!');
-
-      db.close();
-    });
+      else {
+        console.log('user pw is ' + user + ' but pw input was ' + password);
+        res.send('Wrong password');
+      }
+    }
+    else
+      res.send('Wrong email!');
   });
 });
 
@@ -105,40 +104,45 @@ app.post('/profile', function(req, res) {
   res.render('pages/profile');
 });
 
+app.delete('/profile', function(req, res) {
+  console.log('Received profile delete request with item' + req.body.item);
+
+  res.render('pages/profile');
+});
+
 app.get('/logout', function (req, res) {
    req.session.user = null;
    res.send('User logged out');
 });
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+MongoClient.connect(uri, function(err, database) {
+  if(err) {
+    console.log('could not connect to database');
+    throw err;
+  }
+  else {
+    db = database;
+    app.listen(app.get('port'), function() {
+      console.log('Node app is running on port', app.get('port'));
+    });
+  }
 });
 
 function registerAccount(email, password) {
   console.log('Received login request with email: ' + email + ' and password:' + password);
+  var accountData = [
+    {
+      email:email,
+      password:password
+    }
+  ];
 
-  MongoClient.connect(uri, function(err, db) {
+  var users = db.collection('users');
+  users.insert(accountData, function(err, result) {
     if(err)
       throw err;
-
-    console.log("Connected correctly to server.");
-
-    var accountData = [
-      {
-        email:email,
-        password:password
-      }
-    ];
-
-    var users = db.collection('users');
-    users.insert(accountData, function(err, result) {
-      if(err)
-        throw err;
-      else
-        console.log('Added user');
-    });
-
-    db.close();
+    else
+      console.log('Added user');
   });
 }
 
@@ -152,21 +156,16 @@ function createAccountObj(email, password) {
 }
 
 function getTodoList(useremail) {
-  MongoClient.connect(uri, function(err, db) {
-    if(err)
-      throw err;
+  var todolists = db.collection('todolists');
+  todolists.findOne({ email: useremail }, function(err, todo) {
+    if(err) return next(err);
+    if(todo) {
 
-    var todolists = db.collection('todolists');
-    todolists.findOne({ email: useremail }, function(err, todo) {
-      if(err) return next(err);
-      if(todo) {
+    }
+    else
+      res.send('No todo list found for user!');
 
-      }
-      else
-        res.send('No todo list found for user!');
-
-      db.close();
-    });
+    db.close();
   });
 }
 

@@ -27,8 +27,12 @@
           <li class="active"><a href="/">Home</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
+          {{#if session.user}}
+          <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+          {{else}}
           <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
           <li><a href="/signup"><span class="glyphicon glyphicon-log-in"></span> Sign Up</a></li>
+          {{/if}}
         </ul>
       </div>
     </div>

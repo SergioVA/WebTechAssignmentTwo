@@ -1,24 +1,26 @@
 // Create a "close" button and append it to each list item
-var myNodelist = document.getElementsByTagName("LI");
-var i;
+$(document).ready(function() {
+  var myNodelist = document.getElementsByTagName("LI");
+  var i;
 
-// Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
+  // Click on a close button to hide the current list item
+  var close = document.getElementsByClassName("close");
+  var i;
+  for (i = 0; i < close.length; i++) {
+    close[i].onclick = function() {
+      var div = this.parentElement;
+      div.style.display = "none";
+    }
   }
-}
 
-// Add a "checked" symbol when clicking on a list item
-var list = document.querySelector('ul');
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-  }
-}, false);
+  // Add a "checked" symbol when clicking on a list item
+  var list = document.querySelector('#todolist ul');
+  list.addEventListener('click', function(ev) {
+    if (ev.target.tagName === 'LI') {
+      ev.target.classList.toggle('checked');
+    }
+  }, false);
+});
 
 // Create a new list item when clicking on the "Add" button
 function newElement() {
@@ -46,5 +48,5 @@ function newElement() {
     }
   }
 
-  $.ajax({type: 'POST', url: '/profile', data: {item:'testdata'}}});
+  $.post('/profile', {item: 'testdata', done: false});
 }
