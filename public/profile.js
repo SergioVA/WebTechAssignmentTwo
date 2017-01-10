@@ -63,11 +63,17 @@ function newElement() {
   span.appendChild(txt);
   li.appendChild(span);
 
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
-    }
+  span.onclick = function(e) {
+    var div = this.parentElement;
+    div.style.display = "none";
+    e.stopPropagation();
+
+    var itemtext = $(div).contents().filter(function(){
+      return this.nodeType == 3;
+    })[0].nodeValue;
+    itemtext = itemtext.trim();
+
+    $.ajax( {url: '/profile', type: 'DELETE', data: {text:itemtext} });
   }
 
   $.post('/profile', {text: inputValue, done: false});
