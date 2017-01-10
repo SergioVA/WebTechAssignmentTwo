@@ -28,8 +28,12 @@ app.set('view engine', 'handlebars');
 
 //db.users.createIndex({"email":1}, {unique:true});
 
-app.get('/', function(request, response) {
-  response.render('pages/index');
+app.get('/', function(req, res) {
+  if(req.session.user) {
+    res.redirect('/profile');
+  }
+  else
+    res.render('pages/index');
 });
 
 app.get('/login', function(req, res) {
@@ -117,7 +121,7 @@ app.delete('/profile', function(req, res) {
 
 app.get('/logout', function (req, res) {
    req.session.user = null;
-   res.send('User logged out');
+   res.redirect('/');
 });
 
 app.get('/api', function(req, res) {
