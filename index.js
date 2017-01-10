@@ -110,7 +110,9 @@ app.post('/profile', function(req, res) {
 app.delete('/profile', function(req, res) {
   console.log('Received profile delete request with item' + JSON.stringify(req.body));
 
-  res.render('pages/profile');
+  db.collection('todoitems').deleteOne({owner: req.session.user, text: req.body.text}, function(err, r) {
+    res.render('pages/profile');
+  });
 });
 
 app.get('/logout', function (req, res) {

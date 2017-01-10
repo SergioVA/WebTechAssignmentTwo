@@ -7,15 +7,17 @@ $(document).ready(function() {
   var close = document.getElementsByClassName("close");
   var i;
   for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
+    close[i].onclick = function(e) {
       var div = this.parentElement;
       div.style.display = "none";
+      e.stopPropagation();
 
-      var itemtext = $(ev.target).parent().parent().contents().filter(function(){
+      var itemtext = $(div).contents().filter(function(){
         return this.nodeType == 3;
       })[0].nodeValue;
+      itemtext = itemtext.trim();
 
-      $.ajax( {url: '/profile', type: 'DELETE', data: {text:itemtext , done: $(ev.target).hasClass('true')}});
+      $.ajax( {url: '/profile', type: 'DELETE', data: {text:itemtext} });
     }
   }
 
